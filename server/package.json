@@ -1,0 +1,30 @@
+{
+  "name": "video-streaming-server",
+  "version": "1.0.0",
+  "description": "A scalable video streaming platform where educators can upload videos and students can watch the videos in quality which is suitable to them based on network condition etc.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jhamayank02/Scalable-Video-Streaming-System.git"
+  },
+  "keywords": [
+    "video-streaming"
+  ],
+  "author": "Mayank Jha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jhamayank02/Scalable-Video-Streaming-System/issues"
+  },
+  "homepage": "https://github.com/jhamayank02/Scalable-Video-Streaming-System#readme",
+  "dependencies": {
+    "@prisma/client": "^6.2.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "prisma": "^6.2.1"
+  }
+}

@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  Course    Course[]
+}
+
+// User -> Otp
+model Otp {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String
+  otp       String
+  createdAt DateTime @default(now())
+  // TODO -> Need to handle form MongoDB Shell or MongoDB Compass
+  // expires
+}
+
+// Course -> Section -> Video
+model Course {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  duration       Int
+  authorId       String
+  author         User      @relation(fields: [authorId], references: [id])
+  description    String
+  total_sections Int
+  total_videos   Int
+  thumbnail_url  String
+  Section        Section[]
+  Video          Video[]
+}
+
+model Section {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  duration     Int
+  courseId     String
+  course       Course  @relation(fields: [courseId], references: [id])
+  total_videos Int
+  Video        Video[]
+}
+
+model Video {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  video_url   String
+  duration    Int
+  courseId    String
+  course      Course  @relation(fields: [courseId], references: [id])
+  sectionId   String
+  section     Section @relation(fields: [sectionId], references: [id])
+}

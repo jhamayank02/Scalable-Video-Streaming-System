@@ -4,7 +4,7 @@
   "description": "A scalable video streaming platform where educators can upload videos and students can watch the videos in quality which is suitable to them based on network condition etc.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

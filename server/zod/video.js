@@ -8,3 +8,7 @@ exports.getVideoUploadUrlSchema = z.object({
     duration: z.number().int().min(0, {message: "Duration must be a positive integer"}),
     sectionId: z.string()
 })
+
+exports.getVideoSchema = z.object({
+    videoId: z.string()
+})

@@ -1,7 +1,7 @@
 const { putObjectUrl } = require('../aws/s3');
 const prisma = require('../prisma/prismaClient');
 const { TryCatch, ErrorHandler } = require('../utils/error');
-const { getVideoUploadUrlSchema } = require('../zod/video');
+const { getVideoUploadUrlSchema, getVideoSchema } = require('../zod/video');
 
 exports.getUploadUrl = TryCatch(async (req, res) => {
     const parsedData = getVideoUploadUrlSchema.parse(req.body);
@@ -24,7 +24,9 @@ exports.getUploadUrl = TryCatch(async (req, res) => {
     if (!allowedVideoContentTypes.includes(contentType)) {
         throw new ErrorHandler("Invalid content type", 400);
     }
-    const uniqueFilename = `${Date.now()}-${Math.random().toString(36).substring(2)}-${filename}`;
+
+    const filenameWithoutSpaces = filename.replace(' ', '-');
+    const uniqueFilename = `${Date.now()}-${Math.random().toString(36).substring(2)}-${filenameWithoutSpaces}`;
     const unprocessedVideo = await prisma.UnprocessedVideo.create({
         data: {
             title, description, video_key: `unprocessed/${uniqueFilename}`, sectionId, duration
@@ -39,3 +41,20 @@ exports.getUploadUrl = TryCatch(async (req, res) => {
         videoDetails: unprocessedVideo
     })
 });
+exports.getVideo = TryCatch(async (req, res) => {
+    const parsedData = getVideoSchema.parse(req.body);
+    const { videoId } = parsedData;
+    const video = await prisma.Video.findUnique({
+        where: {
+            id: videoId
+        }
+    });
+    if(!video){
+        throw new ErrorHandler("Video not found", 400);
+    }
+    res.status(200).json({
+        status: 200,
+        success: true,
+        video
+    });
+})

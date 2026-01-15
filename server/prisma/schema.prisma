@@ -43,7 +43,7 @@ model Course {
   total_videos   Int       @default(0)
   thumbnail_url  String?
   section        Section[]
-  // Video          Video[]
+  createdAt      DateTime  @default(now())
 }
 
 model Section {
@@ -55,27 +55,29 @@ model Section {
   total_videos     Int                @default(0)
   video            Video[]
   UnprocessedVideo UnprocessedVideo[]
+  createdAt        DateTime           @default(now())
 }
 
 model Video {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String
-  video_key   String  @unique
+  video_key   String   @unique
   duration    Int
-  // courseId    String  @db.ObjectId
-  // course      Course  @relation(fields: [courseId], references: [id])
-  sectionId   String  @db.ObjectId
-  section     Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  sectionId   String   @db.ObjectId
+  isProcessed Boolean  @default(false)
+  section     Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
 }
 
 // This will store the video metadata till the user uploads the video to S3 with the presigned URL and S3 Event Notification notifies the Backend about upload. Else it will be deleted after 1 hour itself
 model UnprocessedVideo {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String
-  video_key   String  @unique
+  video_key   String   @unique
   duration    Int
-  sectionId   String  @db.ObjectId
-  section     Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  sectionId   String   @db.ObjectId
+  section     Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
 }

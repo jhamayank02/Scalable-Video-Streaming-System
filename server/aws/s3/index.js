@@ -1,7 +1,6 @@
-const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
-// *************** TODO -> CHANGE NODE JS USER PERMISSION TO SINGLE BUCKET ONLY
 const s3Client = new S3Client({
     region: "ap-south-1",
     credentials: {
@@ -11,8 +10,16 @@ const s3Client = new S3Client({
 });
 
 async function getObjectUrl(key) {
-
+    const command = new GetObjectCommand({
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: "processed/1739866180204-70nrl3u580j-firstvideo/",
+    });
+    const result = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    console.log(result)
+    return result;
 }
+
+getObjectUrl()
 
 async function putObjectUrl(filename, contentType) {
     const command = new PutObjectCommand({

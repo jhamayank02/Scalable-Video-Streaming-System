@@ -7,7 +7,7 @@ const cron = require('node-cron');
 
 const appRoutes = require('./routes/index');
 const { globalErrorHandler } = require('./middlewares/error');
-const { receiveMessage: unprocessedVideoInfo } = require('./aws/sqs');
+const { receiveVideoUploadedMessage: unprocessedVideoInfo, receiveVideoProcessedMessage: processedVideoInfo } = require('./aws/sqs');
 
 // Configure .env
 dotenv.config();
@@ -32,6 +32,9 @@ app.use(globalErrorHandler);
 
 // CHECK FOR UNPROCESSED VIDEOS FROM S3 (Every 1 min)
 cron.schedule("* * * * *", unprocessedVideoInfo);
+
+// CHECK FOR PROCESSED VIDEOS ECS
+cron.schedule("* * * * *", processedVideoInfo);
 
 
 app.listen(PORT, () => {
